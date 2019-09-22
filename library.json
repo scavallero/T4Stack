@@ -1,0 +1,16 @@
+{
+  "name": "T4Stack",
+  "description": "M5Stack Arduino derived library for ESP32 board",
+  "keywords": "T4Stack",
+  "authors": {
+    "name": "T4Stack",
+    "url": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scavallero/T4Stack.git"
+  },
+  "version": "0.1.0",
+  "framework": "arduino",
+  "platforms": "espressif32"
+}
