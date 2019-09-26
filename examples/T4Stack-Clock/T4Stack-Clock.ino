@@ -1,10 +1,6 @@
 /*
  T4Stack Clock
 
- #########################################################################
- ###### DON'T FORGET TO UPDATE THE User_Setup.h FILE IN THE LIBRARY ######
- #########################################################################
-
  Based on clock sketch by Gilchrist 6/2/2014 1.0
 
  */
