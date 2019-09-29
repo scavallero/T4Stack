@@ -1,22 +1,46 @@
 /*
+ 
  T4Stack Clock
 
- Based on clock sketch by Gilchrist 6/2/2014 1.0
+Copyright (c) 2019 Salvatore Cavallero
 
- */
+ Based on clock sketch by Gilchrist 6/2/2014 1.0
+ 
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+*/
  
 #include <T4Stack.h>
 
-#define TFT_GREY 0x5AEB
+uint32_t targetTime = 0;
 
-uint32_t targetTime = 0;                    // for next 1 second timeout
-
-static uint8_t conv2d(const char* p); // Forward declaration needed for IDE 1.6.x
-
-uint8_t hh = conv2d(__TIME__), mm = conv2d(__TIME__ + 3), ss = conv2d(__TIME__ + 6); // Get H, M, S from compile time
-
-byte omm = 99, oss = 99;
-byte xcolon = 0, xsecs = 0;
+uint8_t hh = 0;
+uint8_t mm = 0; 
+uint8_t ss = 0;
+int brightness = 150;
+uint8_t omm = 99;
+uint8_t oss = 99;
+uint8_t xcolon = 0;
+uint8_t xsecs = 0;
 unsigned int colour = 0;
 
 void setup(void) {
@@ -28,29 +52,33 @@ void setup(void) {
   T4.Lcd.setTextSize(1);
   T4.Lcd.setTextColor(TFT_YELLOW, TFT_BLACK);
 
+  T4.Lcd.setBrightness(brightness);
   targetTime = millis() + 1000;
 }
 
-void loop() {
-  if (targetTime < millis()) {
-    // Set next update for 1 second later
+void loop() 
+{
+  if (targetTime < millis()) 
+  {  
     targetTime = millis() + 1000;
 
-    // Adjust the time values by adding 1 second
-    ss++;              // Advance second
-    if (ss == 60) {    // Check for roll-over
-      ss = 0;          // Reset seconds to zero
-      omm = mm;        // Save last minute time for display update
-      mm++;            // Advance minute
-      if (mm > 59) {   // Check for roll-over
+    // Time adjust, add 1 second
+    ss++;              
+    if (ss == 60) 
+    {    
+      ss = 0;          
+      omm = mm;        
+      mm++;            
+      if (mm > 59) 
+      {   
         mm = 0;
-        hh++;          // Advance hour
-        if (hh > 23) { // Check for 24hr roll-over (could roll-over on 13)
-          hh = 0;      // 0 for 24 hour clock, set to 1 for 12 hour clock
+        hh++;          
+        if (hh > 23) 
+        { 
+          hh = 0;
         }
       }
     }
-
 
     // Update digital time
     int xpos = 0;
@@ -88,13 +116,21 @@ void loop() {
       T4.Lcd.drawNumber(ss, xpos, ysecs, 6);                     // Draw seconds
     }
   }
-}
 
-
-// Function to extract numbers from compile time string
-static uint8_t conv2d(const char* p) {
-  uint8_t v = 0;
-  if ('0' <= *p && *p <= '9')
-    v = *p - '0';
-  return 10 * v + *++p - '0';
+  T4.update();
+  if (T4.BtnC.wasPressed())
+  {
+    brightness+=30;
+    if (brightness > 255)
+      brightness = 250;
+      T4.Lcd.setBrightness(brightness);
+  }
+  if (T4.BtnA.wasPressed())
+  {
+    brightness-=30;
+    if (brightness < 0)
+      brightness = 0;
+      T4.Lcd.setBrightness(brightness);
+  }
+  delay(100);    
 }

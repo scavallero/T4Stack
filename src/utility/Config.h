@@ -12,7 +12,6 @@
 
   // SD card
   #define TFCARD_CS_PIN 13
-  
   #define TFCARD_MOSI_PIN 15
   #define TFCARD_CLK_PIN 14
   #define TFCARD_MISO_PIN 2
